@@ -14,7 +14,7 @@
 
   <project path="kernel/arpi" name="kernel_arpi" revision="arpi-5.4.y" remote="arpi"/>
   <project path="hardware/arpi" name="hardware_arpi" revision="arpi-11" remote="arpi"/>
-  <project path="device/arpi/rpi4" name="device_android_rpi4" revision="arpi-11" remote="gnguyen"/>
-  <project path="scripts" name="script_flash" revision="android_telephony" remote="gnguyen"/>
+  <project path="device/arpi/rpi4" name="device_arpi_rpi4" revision="rpi4-a11-telephony" remote="gnguyen"/>
+  <project path="scripts" name="a4rpi-scripts" revision="rpi4-a11-telephony" remote="gnguyen"/>
 
 </manifest>
