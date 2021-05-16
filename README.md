@@ -48,7 +48,11 @@ $ make ramdisk systemimage vendorimage -j$(your core)
 Use -j[n] option with make, if build host has a good number of CPU cores.<br>
 Reference: http://source.android.com/source/building.html
 ## Write image to sdcard
-### Prepare sd card
+
+### Option 1 - Writing image manually
+
+**Prepare sd card**
+
 Partitions of the card should be set-up like followings.<br>
 p1  128MB for boot : Do fdisk, set W95 FAT32(LBA) & Bootable type, mkfs.vfat<br>
 p2 1024MB for /system : Do fdisk, new primary partition<br>
@@ -57,7 +61,7 @@ p4 remainings for /data : Do fdisk, mkfs.ext4<br>
 Set volume label of /data partition as userdata<br>
 : use -L option for mkfs.ext4, and -n option for mkfs.vfat<br>
  
-### Writing image
+**Writing image**
 ```bash
 # Write system.img and vendor.img
 $ cd out/target/product/rpi4
@@ -72,11 +76,9 @@ $ sudo mkdir p1:/overlays
 $ sudo cp kernel/arpi/arch/arm64/boot/dts/overlays/vc4-kms-v3d-pi4.dtbo to p1:/overlays/
 $ sudo out/target/product/rpi4/ramdisk.img to p1:/
 ```
-You can use the below script for both preparing and writing image.<br>
-Suppose your drive is **/dev/sdb**, run command:
-```bash
-$ cd /path/to/android4pi
-$ ./scripts/android_flash_rpi4.sh sdb
-```
+### Option 2 - Writing image by script
+
+Follow this link for writing, packing image for downloading: [write img to sdcard](https://github.com/nguyenanhgiau/a4rpi-scripts/tree/rpi4-a11-telephony)<br>
+
 Now, you can unplug your sdcard and plug on your rpi4, setup and enjoy!<br>
 **HAVE FUN!**
