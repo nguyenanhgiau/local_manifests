@@ -21,7 +21,8 @@ Then, you can download the android source by the command:
 
 ```bash
 $ mkdir android4pi && cd android4pi #create folder and cd to it
-$ repo init -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r34
+# remove --depth=1 if you want to care about the git history but the size of the download will increase
+$ repo init --depth=1 -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r34
 $ git clone https://github.com/nguyenanhgiau/local_manifests .repo/local_manifests -b rpi4-a11-telephony
 $ repo sync -j$(your core)
  ```
