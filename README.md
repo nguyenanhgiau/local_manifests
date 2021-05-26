@@ -82,4 +82,13 @@ $ sudo out/target/product/rpi4/ramdisk.img to p1:/
 Follow this link for writing, packing image for downloading: [write img to sdcard](https://github.com/nguyenanhgiau/a4rpi-scripts/tree/rpi4-a11-telephony)<br>
 
 Now, you can unplug your sdcard and plug on your rpi4, setup and enjoy!<br>
+
+# ADB Connection
+Because the Raspberry Pis do not have a USB OTG port, the only way to connect ADB is via Internet.<br>
+Plug your Raspberry Pi into your Ethernet LAN or wifi, then wait for it to be given an IP address.<br>
+After that, just run command:<br>
+```bash
+$ adb connect <IP_ADDRESS>:5555 #192.168.1.10:5555
+```
+
 **HAVE FUN!**
