@@ -24,7 +24,7 @@ $ mkdir android4pi && cd android4pi #create folder and cd to it
 # remove --depth=1 if you want to care about the git history but the size of the download will increase
 $ repo init --depth=1 -u https://android.googlesource.com/platform/manifest -b android-s-beta-2
 $ git clone https://github.com/nguyenanhgiau/local_manifests .repo/local_manifests -b rpi4-a12-telephony
-$ repo sync -j$(your core)
+$ repo sync -j[n]
  ```
 Reference download the android source: http://source.android.com/source/downloading.html<br>
 ## Build Android source
@@ -34,15 +34,34 @@ Before building, you have to apply this patch https://github.com/android-rpi/dev
 $ cd /path/to/android4pi
 $ source build/envsetup.sh
 $ lunch rpi4-eng
-$ make ramdisk systemimage vendorimage -j$(your core)
+$ make ramdisk systemimage vendorimage -j[n]
 ```
 Use -j[n] option with make, if build host has a good number of CPU cores.<br>
 Reference: http://source.android.com/source/building.html
-## Write image to sdcard
 
+## Build Android kernel
+This step is optional. There is a prebuilt kernel image in script/kernel-android-S.<br>
+If you really want to build a custom kernel. Follow [kernel android building](https://github.com/android-rpi/kernel_manifest) for more details.
+
+## Flashing
 Follow this link for writing, packing image for downloading: [write img to sdcard](https://github.com/nguyenanhgiau/a4rpi-scripts/tree/rpi4-a12-telephony)<br>
-
+### Write image to sd card:
+```bash
+export KERNEL_DIR=/path/to/kernel_dir #this command is for custom kernel
+./scripts/android_flash_rpi4.sh sdf #suppose your sd card is sdf
+```
 Now, you can unplug your sdcard and plug on your rpi4, setup and enjoy!<br>
+### Package image for downloading and sharing:
+```bash
+export KERNEL_DIR=/path/to/kernel_dir #this command is for custom kernel
+./scripts/package_image.sh
+```
+You will get android_image folder for downloading and sharing.
+After download android_image, just run:
+```bash
+cd android_image
+./android_flash_rpi4.sh sdb #suppose your SD card is sdb
+```
 
 # ADB Connection
 Because the Raspberry Pis do not have a USB OTG port, the only way to connect ADB is via Internet.<br>
