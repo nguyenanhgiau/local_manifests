@@ -8,11 +8,6 @@ Prerequisites:<br>
 - CPU as much core as possible
 - Free space is greater than 200GB
 
-You can refer my build machine:
-- Running on Ubuntu 18.04
-- RAM 16GB
-- CPU 8 cores and 16 threads
-
 Of course, you need a [Rpi4ModelB4G_RAM](https://hshop.vn/products/may-tinh-raspberry-pi-4-model-b-made-in-uk).<br>
 In addition, you also need a 7" HDMI Touch Screen 1024x600. There are many available. The one I use is from [Waveshare](https://hshop.vn/products/man-hinh-7-inch-hdmi-lcd-h-cam-ung-dien-dung-waveshare-co-vo-bao-ve).
 ## Download Android source with local_manifests
