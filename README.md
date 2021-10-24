@@ -20,66 +20,42 @@ Refer this link for install git and repo tool: https://source.android.com/setup/
 Then, you can download the android source by the command:
 
 ```bash
-$ mkdir android4pi && cd android4pi #create folder and cd to it
+mkdir android4pi && cd android4pi #create folder and cd to it
 # remove --depth=1 if you want to care about the git history but the size of the download will increase
-$ repo init --depth=1 -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r34
-$ git clone https://github.com/nguyenanhgiau/local_manifests .repo/local_manifests -b rpi4-a11-telephony
-$ repo sync -j$(your core)
+repo init --depth=1 -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r34
+git clone https://github.com/nguyenanhgiau/local_manifests .repo/local_manifests -b rpi4-a11-telephony
+repo sync -j14 --force-sync
  ```
 Reference download the android source: http://source.android.com/source/downloading.html<br>
 
-## Build Kernel
+## Building Kernel
+
+Because the kernel project haven't integrated into AOSP building, so we have to build it separately.
 ```bash
-$ sudo apt install gcc-aarch64-linux-gnu libssl-dev bc
-$ cd android4pi/kernel/arpi
-$ ARCH=arm64 scripts/kconfig/merge_config.sh arch/arm64/configs/bcm2711_defconfig kernel/configs/android-base.config kernel/configs/android-recommended.config
-$ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make Image.gz
-$ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- DTC_FLAGS="-@" make broadcom/bcm2711-rpi-4-b.dtb
-$ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- DTC_FLAGS="-@" make overlays/vc4-kms-v3d-pi4.dtbo
+sudo apt install gcc-aarch64-linux-gnu libssl-dev bc
+cd android4pi/kernel/arpi
+ARCH=arm64 scripts/kconfig/merge_config.sh arch/arm64/configs/bcm2711_defconfig kernel/configs/android-base.config kernel/configs/android-recommended.config
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make Image.gz
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- DTC_FLAGS="-@" make broadcom/bcm2711-rpi-4-b.dtb
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- DTC_FLAGS="-@" make overlays/vc4-kms-v3d-pi4.dtbo
 ```
-## Build Android source
+## Building AOSP
 
 Before building, you have to apply this patch https://github.com/android-rpi/device_arpi_rpi4/wiki/arpi-11-:-framework-patch
 ```bash
-$ cd /path/to/android4pi
-$ source build/envsetup.sh
-$ lunch rpi4-eng
-$ make ramdisk systemimage vendorimage -j$(your core)
+croot
+source build/envsetup.sh
+lunch rpi4-eng
+make ramdisk systemimage vendorimage -j14
 ```
 Use -j[n] option with make, if build host has a good number of CPU cores.<br>
 Reference: http://source.android.com/source/building.html
-## Write image to sdcard
+## Writing the image to sdcard
 
-### Option 1 - Writing image manually
-
-**Prepare sd card**
-
-Partitions of the card should be set-up like followings.<br>
-p1  128MB for boot : Do fdisk, set W95 FAT32(LBA) & Bootable type, mkfs.vfat<br>
-p2 1024MB for /system : Do fdisk, new primary partition<br>
-p3  128MB for /vendor : Do fdisk, new primary partition<br>
-p4 remainings for /data : Do fdisk, mkfs.ext4<br>
-Set volume label of /data partition as userdata<br>
-: use -L option for mkfs.ext4, and -n option for mkfs.vfat<br>
- 
-**Writing image**
 ```bash
-# Write system.img and vendor.img
-$ cd out/target/product/rpi4
-$ sudo dd if=system.img of=/dev/<p2> bs=1M
-$ sudo dd if=vendor.img of=/dev/<p3> bs=1M
-# Copy kernel & ramdisk to BOOT partition
-$ cd /path/to/android4pi
-$ sudo cp device/arpi/rpi4/boot/* to p1:/
-$ sudo cp kernel/arpi/arch/arm64/boot/Image.gz to p1:/
-$ sudo cp kernel/arpi/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb to p1:/
-$ sudo mkdir p1:/overlays
-$ sudo cp kernel/arpi/arch/arm64/boot/dts/overlays/vc4-kms-v3d-pi4.dtbo to p1:/overlays/
-$ sudo out/target/product/rpi4/ramdisk.img to p1:/
+croot
+./scripts/android_flash_rpi4.sh sdb #suppose your sd card is sdb
 ```
-### Option 2 - Writing image by script
-
-Follow this link for writing, packing image for downloading: [write img to sdcard](https://github.com/nguyenanhgiau/a4rpi-scripts/tree/rpi4-a11-telephony)<br>
 
 Now, you can unplug your sdcard and plug on your rpi4, setup and enjoy!<br>
 
