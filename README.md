@@ -17,7 +17,7 @@ Then, you can download the android source by the command:
 ```bash
 mkdir android4pi && cd android4pi #create folder and cd to it
 # remove --depth=1 if you want to care about the git history but the size of the download will increase
-repo init --depth=1 -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r34
+repo init --depth=1 -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r37
 git clone https://github.com/nguyenanhgiau/local_manifests .repo/local_manifests -b rpi4-a11-telephony
 repo sync -j14 --force-sync
  ```
@@ -29,10 +29,8 @@ Because the kernel project haven't integrated into AOSP building, so we have to 
 ```bash
 sudo apt install gcc-aarch64-linux-gnu libssl-dev bc
 cd android4pi/kernel/arpi
-ARCH=arm64 scripts/kconfig/merge_config.sh arch/arm64/configs/bcm2711_defconfig kernel/configs/android-base.config kernel/configs/android-recommended.config
-ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make Image.gz
-ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- DTC_FLAGS="-@" make broadcom/bcm2711-rpi-4-b.dtb
-ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- DTC_FLAGS="-@" make overlays/vc4-kms-v3d-pi4.dtbo
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make lineageos_rpi4_defconfig
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make Image.gz dtbs -j16
 ```
 ## Building AOSP
 
